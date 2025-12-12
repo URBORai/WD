@@ -45,7 +45,7 @@ const CONFIG = {
             name: "天賜良緣",
             icon: "🍽️",
             // ✅ 修正：使用正確的 Google Maps 嵌入網址格式
-            mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3614.5234567890123!2d121.43123456789012!3d25.037654321098765!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a98765432109%3A0x9876543210987654!2z5paw5YyX5biC5paw6I6K5Y2A5Lit5q2j6Lev1542iZ8!5e0!3m2!1szh-TW!2stw!4v9876543210123!5m2!1szh-TW!2stw"
+            mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3615.0580511461876!2d121.42758747690753!3d25.03210393836512!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a7e93204aeb5%3A0x4312ab64305a0582!2z5aSp6LOc6Imv57ej5aSn6aOv5bqX!5e0!3m2!1szh-TW!2stw!4v1765560179837!5m2!1szh-TW!2stw" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
         }
     },
 
