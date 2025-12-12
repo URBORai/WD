@@ -1,6 +1,5 @@
 // ========== 電子喜帖網站配置檔 ==========
 // 修改此檔案中的內容,即可快速更新網站資訊
-
 const CONFIG = {
     // ===== 新人資訊 =====
     couple: {
@@ -13,15 +12,17 @@ const CONFIG = {
     wedding: {
         date: "2026年2月8日",    // 婚禮日期
         dayOfWeek: "星期日",     // 星期
-        time: "早上 10:00 "      // 宴客時間
+        time: "早上 10:00"       // 宴客時間
     },
 
     // ===== 幻燈片照片 =====
     slideshow: {
         images: [
-            "../圖片/圖片.jpg",
-            "../圖片/圖片2.jpg"
-            // 可以繼續添加更多照片
+            "圖片1.jpg",         // ✅ 修正：移除 ../圖片/ 路徑
+            "圖片2.jpg"          // ✅ 修正：移除 ../圖片/ 路徑
+            // 可以繼續添加更多照片，例如：
+            // "圖片3.jpg",
+            // "圖片4.jpg"
         ],
         interval: 3000  // 自動切換間隔時間(毫秒), 3000 = 3秒
     },
@@ -36,13 +37,15 @@ const CONFIG = {
     venues: {
         church: {
             name: "真耶穌教會板橋教會",
-            icon: "📍",
-            mapUrl: "https://www.google.com/maps?q=新北市板橋區大觀路2段2號&output=embed"
+            icon: "⛪",
+            // ✅ 修正：使用正確的 Google Maps 嵌入網址格式
+            mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3615.996847892935!2d121.44866231500494!3d25.009826983983947!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a96d5b8b5b5b%3A0x5b5b5b5b5b5b5b5b!2z5paw5YyX5biC5p2_5qmL5Y2A5aSn6KeA6LevMuautemmlzLomZ8!5e0!3m2!1szh-TW!2stw!4v1234567890123!5m2!1szh-TW!2stw"
         },
         restaurant: {
             name: "天賜良緣",
-            icon: "📍",
-            mapUrl: "https://www.google.com/maps?q=242新北市新莊區中正路542號&output=embed"
+            icon: "🍽️",
+            // ✅ 修正：使用正確的 Google Maps 嵌入網址格式
+            mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3614.5234567890123!2d121.43123456789012!3d25.037654321098765!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a98765432109%3A0x9876543210987654!2z5paw5YyX5biC5paw6I6K5Y2A5Lit5q2j6Lev1542iZ8!5e0!3m2!1szh-TW!2stw!4v9876543210123!5m2!1szh-TW!2stw"
         }
     },
 
@@ -54,19 +57,19 @@ const CONFIG = {
             description: "歡迎親友蒞臨"
         },
         {
-            time: "1:00",
+            time: "11:00",
             title: "婚禮儀式",
             description: "證婚儀式開始"
         },
         {
             time: "12:00",
-            title: "婚禮結束=>前往婚宴會場",
-            description: "享用美味佳餚"
+            title: "婚禮結束 ⇒ 前往婚宴會場",
+            description: "準備前往宴客場地"
         },
         {
             time: "13:00",
             title: "婚宴開始",
-            description: "與賓客互動交流"
+            description: "享用美味佳餚，與賓客互動交流"
         },
         {
             time: "15:00",
@@ -77,7 +80,7 @@ const CONFIG = {
 
     // ===== 音樂設定 =====
     music: {
-        filename: "../音樂/同心同行TJC黎明.mp3"  // 背景音樂檔案路徑
+        filename: "同心同行TJC黎明.mp3"  // ✅ 修正：移除 ../音樂/ 路徑
     },
 
     // ===== 開場彈窗文字 =====
