@@ -39,7 +39,7 @@ const CONFIG = {
             name: "真耶穌教會板橋教會",
             icon: "⛪",
             // ✅ 修正：使用正確的 Google Maps 嵌入網址格式
-            mapUrl: "https://maps.app.goo.gl/ANsEQABaJEpGE727A"
+            mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3615.889888845628!2d121.44418747690705!3d25.00385723950183!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346802acd9719789%3A0x19bc37be4f26da2f!2z55yf6IC256mM5pWZ5pyD5p2_5qmL5pWZ5pyD!5e0!3m2!1szh-TW!2stw!4v1765560078710!5m2!1szh-TW!2stw" width="800" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
         },
         restaurant: {
             name: "天賜良緣",
