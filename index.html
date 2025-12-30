@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOM  &   JOY - 電子喜帖</title>
+
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <!-- 自訂樣式 -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 固定式導航列 -->
+    <nav class="main-nav">
+        <a href="#hero" class="nav-link">首頁</a>
+        <a href="#about" class="nav-link">關於我們</a>
+        <a href="#timeline" class="nav-link">婚禮進程</a>
+        <a href="#guestbook" class="nav-link">留言祝福</a>
+        <a href="#links" class="nav-link">回覆出席</a>
+        <a href="#venue" class="nav-link">地點</a>
+        <button id="music-toggle" class="music-btn" aria-label="播放/暫停音樂">
+            <span class="music-icon">🔇</span>
+        </button>
+    </nav>
+
+    <!-- 隱藏的背景音樂 -->
+    <audio id="bg-music" loop>
+        <source src="" type="audio/mpeg">
+        您的瀏覽器不支援音訊播放。
+    </audio>
+
+    <!-- 主要內容區 -->
+
+    <!-- 首頁區塊 -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
+            <h1 class="couple-names"></h1>
+            <p class="wedding-date"></p>
+            <p class="tagline">誠摯邀請您見證我們的幸福時刻</p>
+        </div>
+    </section>
+
+    <!-- 新人介紹區塊 -->
+    <section id="profile" class="profile-section">
+        <div class="profile-container">
+            <h2 data-aos="fade-up">認識我們</h2>
+
+            <!-- 切換按鈕 -->
+            <div class="profile-toggle" data-aos="fade-up" data-aos-delay="100">
+                <button class="toggle-btn active" data-profile="groom">新郎</button>
+                <button class="toggle-btn" data-profile="bride">新娘</button>
+            </div>
+
+            <!-- 個人介紹卡片容器 -->
+            <div class="profile-cards-wrapper">
+                <!-- 新郎卡片 -->
+                <div class="profile-card active" id="groom-card">
+                    <div class="profile-photo">
+                        <img src="" alt="新郎照片" id="groom-photo">
+                    </div>
+                    <div class="profile-info">
+                        <h3 class="profile-name" id="groom-name"></h3>
+                        <p class="profile-title" id="groom-title"></p>
+                        <p class="profile-description" id="groom-description"></p>
+                        <div class="profile-hobbies">
+                            <h4>興趣愛好</h4>
+                            <div class="hobbies-list" id="groom-hobbies"></div>
+                        </div>
+                        <blockquote class="profile-quote" id="groom-quote"></blockquote>
+                    </div>
+                </div>
+
+                <!-- 新娘卡片 -->
+                <div class="profile-card" id="bride-card">
+                    <div class="profile-photo">
+                        <img src="" alt="新娘照片" id="bride-photo">
+                    </div>
+                    <div class="profile-info">
+                        <h3 class="profile-name" id="bride-name"></h3>
+                        <p class="profile-title" id="bride-title"></p>
+                        <p class="profile-description" id="bride-description"></p>
+                        <div class="profile-hobbies">
+                            <h4>興趣愛好</h4>
+                            <div class="hobbies-list" id="bride-hobbies"></div>
+                        </div>
+                        <blockquote class="profile-quote" id="bride-quote"></blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 左右切換箭頭 -->
+            <div class="profile-arrows">
+                <button class="arrow-btn prev-btn" id="prev-profile">‹</button>
+                <button class="arrow-btn next-btn" id="next-profile">›</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 關於我們區塊 -->
+    <section id="about" class="about-section">
+        <div class="split-container">
+            <div class="split-content" data-aos="fade-right">
+                <h2>我們未完待續的故事</h2>
+                <p>神的配合真的太奇妙，在神的家中認識並且如今能在神的愛中共承生命之恩，即使看起來是迥然不同的兩人，但一切都是那麼的剛好，很開心能與你們分享這份喜悅，謝謝你們！</p>
+                <div class="wedding-info-inline">
+                    <div class="info-item">
+                        <h3>婚禮日期</h3>
+                        <p class="wedding-date-info"></p>
+                    </div>
+                    <div class="info-item">
+                        <h3>舉行時間</h3>
+                        <p class="wedding-time-info"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="split-image slideshow-container" data-aos="fade-left">
+                <!-- 幻燈片將由 JavaScript 動態生成 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 婚禮進程區塊 -->
+    <section id="timeline" class="timeline-section">
+        <div class="timeline-content">
+            <h2 data-aos="fade-up">婚禮進程</h2>
+            <div class="timeline-wrapper">
+                <!-- Timeline 項目將由 JavaScript 動態生成 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP / 連結區塊 -->
+    <section id="links" class="links-section">
+        <h2 data-aos="fade-up">回覆出席</h2>
+        <div class="link-cards">
+            <a href="" target="_blank" class="link-box rsvp-form-link" data-aos="fade-right" data-aos-delay="200">
+                <div class="card-icon">📝</div>
+                <h3>填寫回覆表單</h3>
+                <p>請告訴我們您是否能參加</p>
+            </a>
+            <a href="" target="_blank" class="link-box old-invitation-link" data-aos="fade-left" data-aos-delay="200">
+                <div class="card-icon">💌</div>
+                <h3>查看舊版喜帖</h3>
+                <p>傳統版本電子喜帖</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- 留言板區塊 -->
+    <section id="guestbook" class="guestbook-section">
+        <div class="guestbook-container">
+            <h2 data-aos="fade-up">留言祝福</h2>
+            <p class="guestbook-subtitle" data-aos="fade-up" data-aos-delay="100">
+                留下您的祝福,與我們分享喜悅
+            </p>
+
+            <!-- 發表留言表單 -->
+            <div class="message-form-wrapper" data-aos="fade-up" data-aos-delay="200">
+                <form id="message-form" class="message-form">
+                    <input
+                        type="text"
+                        id="author-input"
+                        placeholder="您的暱稱（選填，最多30字）"
+                        maxlength="30"
+                    />
+
+                    <!-- 頭像選擇器 -->
+                    <div class="avatar-selector">
+                        <label class="avatar-label">選擇您的頭像：</label>
+                        <div class="avatar-options">
+                            <label class="avatar-option">
+                                <input type="radio" name="avatar" value="😊" checked>
+                                <span class="avatar-icon">😊</span>
+                            </label>
+                            <label class="avatar-option">
+                                <input type="radio" name="avatar" value="🥰">
+                                <span class="avatar-icon">🥰</span>
+                            </label>
+                            <label class="avatar-option">
+                                <input type="radio" name="avatar" value="😎">
+                                <span class="avatar-icon">😎</span>
+                            </label>
+                            <label class="avatar-option">
+                                <input type="radio" name="avatar" value="🤗">
+                                <span class="avatar-icon">🤗</span>
+                            </label>
+                            <label class="avatar-option">
+                                <input type="radio" name="avatar" value="🌟">
+                                <span class="avatar-icon">🌟</span>
+                            </label>
+                            <label class="avatar-option">
+                                <input type="radio" name="avatar" value="💐">
+                                <span class="avatar-icon">💐</span>
+                            </label>
+                            <label class="avatar-option">
+                                <input type="radio" name="avatar" value="🎉">
+                                <span class="avatar-icon">🎉</span>
+                            </label>
+                            <label class="avatar-option">
+                                <input type="radio" name="avatar" value="❤️">
+                                <span class="avatar-icon">❤️</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <textarea
+                        id="message-input"
+                        placeholder="寫下您的祝福..."
+                        maxlength="200"
+                        required
+                    ></textarea>
+                    <div class="form-footer">
+                        <span class="char-count">0 / 200</span>
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-text">送出祝福</span>
+                            <span class="btn-loading" style="display: none;">傳送中...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 留言列表 -->
+            <div class="messages-list" id="messages-list" data-aos="fade-up" data-aos-delay="300">
+                <div class="loading-spinner">載入中...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 地點區塊 -->
+    <section id="venue" class="venue-section">
+        <div class="venue-container">
+            <h2 data-aos="fade-up">地點</h2>
+
+            <!-- 快速定位按鈕 -->
+            <div class="location-buttons" data-aos="fade-up" data-aos-delay="100">
+                <!-- 地點按鈕將由 JavaScript 動態生成 -->
+            </div>
+
+            <!-- 地圖預覽 -->
+            <div class="map-preview" data-aos="fade-up" data-aos-delay="200">
+                <iframe
+                    id="venue-map"
+                    src=""
+                    width="100%"
+                    height="100%"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁尾 -->
+    <footer class="footer">
+        <p>期待與您相見 ❤️</p>
+        <p class="small-text">感謝您撥冗參加</p>
+    </footer>
+
+    <!-- Lightbox 全螢幕預覽 -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-close" onclick="closeLightbox()">×</div>
+        <div class="lightbox-prev" onclick="changeLightboxImage(-1)">‹</div>
+        <div class="lightbox-next" onclick="changeLightboxImage(1)">›</div>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="預覽圖片">
+        </div>
+        <div class="lightbox-counter">
+            <span id="lightbox-current">1</span> / <span id="lightbox-total">1</span>
+        </div>
+    </div>
+
+    <!-- 配置檔 -->
+    <script src="config.js"></script>
+
+    <!-- AOS JavaScript -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- SweetAlert2 JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Supabase JavaScript SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- 自訂 JavaScript -->
+    <script>
+        // 使用配置檔初始化頁面內容
+        function initPageContent() {
+            // 更新新人名字
+            document.querySelector('.couple-names').textContent =
+                CONFIG.couple.groom + CONFIG.couple.separator + CONFIG.couple.bride;
+
+            // 更新婚禮日期
+            document.querySelector('.wedding-date').textContent = CONFIG.wedding.date;
+
+            // 更新婚禮資訊
+            document.querySelector('.wedding-date-info').textContent =
+                `${CONFIG.wedding.date}(${CONFIG.wedding.dayOfWeek})`;
+            document.querySelector('.wedding-time-info').textContent = CONFIG.wedding.time;
+
+            // 初始化幻燈片
+            initSlideshow();
+
+            // 初始化個人介紹
+            initProfiles();
+
+            // 動態生成 Timeline
+            generateTimeline();
+
+            // 更新連結
+            document.querySelector('.rsvp-form-link').href = CONFIG.links.rsvpForm;
+            document.querySelector('.old-invitation-link').href = CONFIG.links.oldInvitation;
+
+            // 動態生成地點按鈕
+            generateVenueButtons();
+
+            // 更新音樂來源
+            document.querySelector('#bg-music source').src = CONFIG.music.filename;
+            document.getElementById('bg-music').load();
+        }
+
+        // 動態生成 Timeline
+        function generateTimeline() {
+            const timelineWrapper = document.querySelector('.timeline-wrapper');
+            timelineWrapper.innerHTML = ''; // 清空現有內容
+
+            CONFIG.timeline.forEach((item, index) => {
+                const delay = (index + 1) * 100; // 每個項目延遲 100ms
+                const timelineItem = `
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="${delay}">
+                        <div class="timeline-marker">
+                            <div class="timeline-dot"></div>
+                        </div>
+                        <div class="timeline-info">
+                            <span class="timeline-time">${item.time}</span>
+                            <div class="timeline-details">
+                                <h3>${item.title}</h3>
+                                <p>${item.description}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                timelineWrapper.innerHTML += timelineItem;
+            });
+        }
+
+        // 動態生成地點按鈕
+        function generateVenueButtons() {
+            const locationButtons = document.querySelector('.location-buttons');
+            locationButtons.innerHTML = ''; // 清空現有內容
+
+            let isFirst = true;
+            for (const [key, venue] of Object.entries(CONFIG.venues)) {
+                const button = document.createElement('button');
+                button.className = 'location-btn' + (isFirst ? ' active' : '');
+                button.setAttribute('data-location', key);
+                button.textContent = `${venue.icon} ${venue.name}`;
+                locationButtons.appendChild(button);
+                isFirst = false;
+            }
+        }
+
+        // 初始化個人介紹
+        let currentProfile = 'groom'; // 當前顯示的介紹（groom 或 bride）
+
+        function initProfiles() {
+            // 填充新郎資料
+            document.getElementById('groom-photo').src = CONFIG.couple.groomProfile.photo;
+            document.getElementById('groom-name').textContent = CONFIG.couple.groomProfile.name;
+            document.getElementById('groom-title').textContent = CONFIG.couple.groomProfile.title;
+            document.getElementById('groom-description').textContent = CONFIG.couple.groomProfile.description;
+            document.getElementById('groom-quote').textContent = CONFIG.couple.groomProfile.quote;
+
+            // 生成新郎興趣標籤
+            const groomHobbies = document.getElementById('groom-hobbies');
+            groomHobbies.innerHTML = '';
+            CONFIG.couple.groomProfile.hobbies.forEach(hobby => {
+                const tag = document.createElement('span');
+                tag.className = 'hobby-tag';
+                tag.textContent = hobby;
+                groomHobbies.appendChild(tag);
+            });
+
+            // 填充新娘資料
+            document.getElementById('bride-photo').src = CONFIG.couple.brideProfile.photo;
+            document.getElementById('bride-name').textContent = CONFIG.couple.brideProfile.name;
+            document.getElementById('bride-title').textContent = CONFIG.couple.brideProfile.title;
+            document.getElementById('bride-description').textContent = CONFIG.couple.brideProfile.description;
+            document.getElementById('bride-quote').textContent = CONFIG.couple.brideProfile.quote;
+
+            // 生成新娘興趣標籤
+            const brideHobbies = document.getElementById('bride-hobbies');
+            brideHobbies.innerHTML = '';
+            CONFIG.couple.brideProfile.hobbies.forEach(hobby => {
+                const tag = document.createElement('span');
+                tag.className = 'hobby-tag';
+                tag.textContent = hobby;
+                brideHobbies.appendChild(tag);
+            });
+
+            // 初始化切換按鈕事件
+            initProfileToggle();
+        }
+
+        function initProfileToggle() {
+            const toggleButtons = document.querySelectorAll('.toggle-btn');
+            const prevBtn = document.getElementById('prev-profile');
+            const nextBtn = document.getElementById('next-profile');
+
+            // 切換按鈕點擊事件
+            toggleButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetProfile = this.getAttribute('data-profile');
+                    if (targetProfile !== currentProfile) {
+                        switchProfile(targetProfile);
+                    }
+                });
+            });
+
+            // 左箭頭（切換到上一個）
+            prevBtn.addEventListener('click', function() {
+                const targetProfile = currentProfile === 'groom' ? 'bride' : 'groom';
+                switchProfile(targetProfile);
+            });
+
+            // 右箭頭（切換到下一個）
+            nextBtn.addEventListener('click', function() {
+                const targetProfile = currentProfile === 'groom' ? 'bride' : 'groom';
+                switchProfile(targetProfile);
+            });
+        }
+
+        function switchProfile(targetProfile) {
+            // 如果已經是當前 profile，不做任何事
+            if (targetProfile === currentProfile) {
+                return;
+            }
+
+            const groomCard = document.getElementById('groom-card');
+            const brideCard = document.getElementById('bride-card');
+            const toggleButtons = document.querySelectorAll('.toggle-btn');
+
+            // 更新切換按鈕狀態
+            toggleButtons.forEach(btn => {
+                if (btn.getAttribute('data-profile') === targetProfile) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // 先移除當前顯示的卡片
+            groomCard.classList.remove('active');
+            brideCard.classList.remove('active');
+
+            // 短暫延遲後顯示目標卡片（讓動畫更流暢）
+            setTimeout(() => {
+                if (targetProfile === 'groom') {
+                    groomCard.classList.add('active');
+                } else {
+                    brideCard.classList.add('active');
+                }
+            }, 50);
+
+            currentProfile = targetProfile;
+        }
+
+        // 初始化幻燈片
+        let currentSlide = 0;
+        let slideInterval;
+
+        function initSlideshow() {
+            const container = document.querySelector('.slideshow-container');
+            if (!container || !CONFIG.slideshow || !CONFIG.slideshow.images.length) return;
+
+            // 清空容器
+            container.innerHTML = '';
+
+            // 創建幻燈片
+            CONFIG.slideshow.images.forEach((image, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'slideshow-slide' + (index === 0 ? ' active' : '');
+                slide.innerHTML = `<img src="${image}" alt="新人照片 ${index + 1}">`;
+                slide.addEventListener('click', () => openLightbox(index));
+                container.appendChild(slide);
+            });
+
+            // 創建導航點
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'slideshow-dots';
+            CONFIG.slideshow.images.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.className = 'slideshow-dot' + (index === 0 ? ' active' : '');
+                dot.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    goToSlide(index);
+                });
+                dotsContainer.appendChild(dot);
+            });
+            container.appendChild(dotsContainer);
+
+            // 開始自動播放
+            startSlideshow();
+        }
+
+        function goToSlide(index) {
+            const slides = document.querySelectorAll('.slideshow-slide');
+            const dots = document.querySelectorAll('.slideshow-dot');
+
+            if (!slides.length) return;
+
+            // 移除當前 active
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+
+            // 設置新的 active
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            const slides = document.querySelectorAll('.slideshow-slide');
+            if (!slides.length) return;
+
+            const next = (currentSlide + 1) % slides.length;
+            goToSlide(next);
+        }
+
+        function startSlideshow() {
+            if (slideInterval) clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, CONFIG.slideshow.interval);
+        }
+
+        function stopSlideshow() {
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+            }
+        }
+
+        // Lightbox 全螢幕預覽功能
+        let currentLightboxIndex = 0;
+
+        function openLightbox(index) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCurrent = document.getElementById('lightbox-current');
+            const lightboxTotal = document.getElementById('lightbox-total');
+
+            currentLightboxIndex = index;
+            lightboxImg.src = CONFIG.slideshow.images[index];
+            lightboxCurrent.textContent = index + 1;
+            lightboxTotal.textContent = CONFIG.slideshow.images.length;
+
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 防止背景滾動
+
+            // 暫停幻燈片自動播放
+            stopSlideshow();
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = ''; // 恢復滾動
+
+            // 恢復幻燈片自動播放
+            startSlideshow();
+        }
+
+        function changeLightboxImage(direction) {
+            const total = CONFIG.slideshow.images.length;
+            currentLightboxIndex = (currentLightboxIndex + direction + total) % total;
+
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCurrent = document.getElementById('lightbox-current');
+
+            lightboxImg.src = CONFIG.slideshow.images[currentLightboxIndex];
+            lightboxCurrent.textContent = currentLightboxIndex + 1;
+        }
+
+        // 鍵盤快捷鍵
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('lightbox');
+            if (!lightbox.classList.contains('active')) return;
+
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                changeLightboxImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeLightboxImage(1);
+            }
+        });
+
+        // 點擊背景關閉 Lightbox
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+
+        // 初始化 AOS 滾動動畫
+        AOS.init({
+            duration: 1000,
+            once: false,
+            offset: 100
+        });
+
+        // 滾動時自動高亮導航列
+        function updateActiveNavLink() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            let currentSection = '';
+            const scrollPosition = window.scrollY + 150; // 增加偏移量以提早觸發
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            // 移除所有 active 類別
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+
+                // 如果連結對應當前區塊，添加 active 類別
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // 監聽滾動事件
+        window.addEventListener('scroll', updateActiveNavLink);
+
+        // 地點按鈕切換地圖
+        function initLocationButtons() {
+            const locationButtons = document.querySelectorAll('.location-btn');
+            const mapIframe = document.getElementById('venue-map');
+
+            // 設置初始地圖為第一個地點
+            const firstVenue = Object.values(CONFIG.venues)[0];
+            if (firstVenue) {
+                mapIframe.src = firstVenue.mapUrl;
+            }
+
+            locationButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有按鈕的 active 類別
+                    locationButtons.forEach(btn => btn.classList.remove('active'));
+
+                    // 添加當前按鈕的 active 類別
+                    this.classList.add('active');
+
+                    // 更新地圖
+                    const location = this.getAttribute('data-location');
+                    if (CONFIG.venues[location]) {
+                        mapIframe.src = CONFIG.venues[location].mapUrl;
+                    }
+                });
+            });
+        }
+
+        // 頁面載入完成後執行
+        window.addEventListener('load', function() {
+            // 初始化頁面內容
+            initPageContent();
+
+            // 初始化導航高亮
+            updateActiveNavLink();
+
+            // 初始化地點按鈕
+            initLocationButtons();
+
+            // 顯示 SweetAlert2 彈窗
+            Swal.fire({
+                title: CONFIG.welcomePopup.title,
+                html: CONFIG.welcomePopup.text.replace(/\n/g, '<br>'),
+                //icon: 'heart',
+                confirmButtonText: '進入',
+                confirmButtonColor: '#d4a574',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown animate__faster'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp animate__faster'
+                },
+                customClass: {
+                    popup: 'custom-popup',
+                    title: 'custom-title',
+                    htmlContainer: 'custom-text',
+                    confirmButton: 'custom-confirm-button'
+                },
+                backdrop: 'rgba(0,0,0,0.7)'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // 播放背景音樂並淡入
+                    fadeInMusic();
+                }
+            });
+        });
+
+        // 音樂淡入函式
+        function fadeInMusic() {
+            const music = document.getElementById('bg-music');
+            music.volume = 0;
+            music.play();
+
+            let volume = 0;
+            const maxVolume = 0.7;  // 最大音量 70%
+            const fadeDuration = 2000;  // 淡入時間 2 秒
+            const steps = 20;
+            const volumeStep = maxVolume / steps;
+            const timeStep = fadeDuration / steps;
+
+            const fadeInterval = setInterval(function() {
+                if (volume < maxVolume) {
+                    volume += volumeStep;
+                    music.volume = Math.min(volume, maxVolume);
+                } else {
+                    clearInterval(fadeInterval);
+                }
+            }, timeStep);
+
+            // 更新按鈕狀態
+            updateMusicButton(true);
+        }
+
+        // 音樂控制按鈕功能
+        function initMusicControl() {
+            const musicBtn = document.getElementById('music-toggle');
+            const music = document.getElementById('bg-music');
+            const musicIcon = musicBtn.querySelector('.music-icon');
+
+            musicBtn.addEventListener('click', function() {
+                if (music.paused) {
+                    // 播放音樂
+                    if (music.currentTime === 0) {
+                        fadeInMusic();
+                    } else {
+                        music.volume = 0.7;
+                        music.play();
+                        updateMusicButton(true);
+                    }
+                } else {
+                    // 暫停音樂
+                    music.pause();
+                    updateMusicButton(false);
+                }
+            });
+
+            // 監聽音樂播放狀態變化
+            music.addEventListener('play', function() {
+                updateMusicButton(true);
+            });
+
+            music.addEventListener('pause', function() {
+                updateMusicButton(false);
+            });
+        }
+
+        // 更新音樂按鈕外觀
+        function updateMusicButton(isPlaying) {
+            const musicBtn = document.getElementById('music-toggle');
+            const musicIcon = musicBtn.querySelector('.music-icon');
+
+            if (isPlaying) {
+                musicIcon.textContent = '🔊';
+                musicBtn.classList.add('playing');
+            } else {
+                musicIcon.textContent = '🔇';
+                musicBtn.classList.remove('playing');
+            }
+        }
+
+        // 初始化音樂控制
+        initMusicControl();
+    </script>
+
+    <!-- 留言板功能 -->
+    <script src="guestbook.js"></script>
+</body>
+</html>
