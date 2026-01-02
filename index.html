@@ -14,6 +14,9 @@
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
+    <!-- Hammer.js - 觸控手勢庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+
     <!-- 自訂樣式 -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -26,6 +29,7 @@
         <a href="#guestbook" class="nav-link">留言祝福</a>
         <a href="#links" class="nav-link">回覆出席</a>
         <a href="#venue" class="nav-link">地點</a>
+        <a href="#paper-invitation" class="nav-link">紙本喜帖</a>
         <button id="music-toggle" class="music-btn" aria-label="播放/暫停音樂">
             <span class="music-icon">🔇</span>
         </button>
@@ -141,15 +145,20 @@
     <section id="links" class="links-section">
         <h2 data-aos="fade-up">回覆出席</h2>
         <div class="link-cards">
-            <a href="" target="_blank" class="link-box rsvp-form-link" data-aos="fade-right" data-aos-delay="200">
+            <a href="" target="_blank" class="link-box old-invitation-link" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-icon">💌</div>
+                <h3>查看舊版</h3>
+                <p>舊版電子網站</p>
+            </a>
+            <a href="#paper-invitation" class="link-box paper-invitation-link" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-icon">💐</div>
+                <h3>電子喜帖</h3>
+                <p>查看紙本喜帖預覽</p>
+            </a>
+            <a href="" target="_blank" class="link-box rsvp-form-link" data-aos="fade-up" data-aos-delay="300">
                 <div class="card-icon">📝</div>
                 <h3>填寫回覆表單</h3>
                 <p>請告訴我們您是否能參加</p>
-            </a>
-            <a href="" target="_blank" class="link-box old-invitation-link" data-aos="fade-left" data-aos-delay="200">
-                <div class="card-icon">💌</div>
-                <h3>查看舊版喜帖</h3>
-                <p>傳統版本電子喜帖</p>
             </a>
         </div>
     </section>
@@ -276,6 +285,23 @@
         </div>
         <div class="lightbox-counter">
             <span id="lightbox-current">1</span> / <span id="lightbox-total">1</span>
+        </div>
+    </div>
+
+    <!-- 紙本喜帖 Lightbox -->
+    <div class="paper-invitation-lightbox" id="paper-invitation-lightbox">
+        <div class="lightbox-close" onclick="closePaperInvitation()">×</div>
+        <div class="lightbox-prev" onclick="changePaperInvitationImage(-1)">‹</div>
+        <div class="lightbox-next" onclick="changePaperInvitationImage(1)">›</div>
+        <div class="lightbox-content">
+            <img id="paper-invitation-img" src="" alt="紙本喜帖">
+        </div>
+        <div class="lightbox-counter">
+            <span id="paper-invitation-current">1</span> / <span id="paper-invitation-total">2</span>
+        </div>
+        <div class="lightbox-hint">
+            💡 手機：左右滑動切換 · 雙指縮放查看 · 雙擊快速縮放<br>
+            電腦：左右鍵切換 · 滑鼠滾輪縮放 · ESC 關閉
         </div>
     </div>
 
@@ -792,6 +818,187 @@
 
         // 初始化音樂控制
         initMusicControl();
+    </script>
+
+    <script>
+        // ========== 紙本喜帖 Lightbox（手機友好版）==========
+        let currentPaperInvitationIndex = 0;
+        let paperInvitationScale = 1;
+        let paperInvitationTranslateX = 0;
+        let paperInvitationTranslateY = 0;
+
+        // 點擊導航列或連結區塊按鈕時開啟
+        document.addEventListener('DOMContentLoaded', function() {
+            const paperInvitationLinks = document.querySelectorAll('a[href="#paper-invitation"]');
+            paperInvitationLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openPaperInvitation(0);
+                });
+            });
+        });
+
+        function openPaperInvitation(index) {
+            const lightbox = document.getElementById('paper-invitation-lightbox');
+            const img = document.getElementById('paper-invitation-img');
+            const current = document.getElementById('paper-invitation-current');
+            const total = document.getElementById('paper-invitation-total');
+
+            currentPaperInvitationIndex = index;
+            resetImageTransform();
+
+            img.src = CONFIG.paperInvitation.images[index];
+            current.textContent = index + 1;
+            total.textContent = CONFIG.paperInvitation.images.length;
+
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // 初始化觸控手勢
+            setTimeout(() => initPaperInvitationGestures(), 100);
+        }
+
+        function closePaperInvitation() {
+            const lightbox = document.getElementById('paper-invitation-lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            resetImageTransform();
+        }
+
+        function changePaperInvitationImage(direction) {
+            if (paperInvitationScale > 1) return; // 放大時不切換
+
+            const total = CONFIG.paperInvitation.images.length;
+            currentPaperInvitationIndex = (currentPaperInvitationIndex + direction + total) % total;
+
+            const img = document.getElementById('paper-invitation-img');
+            const current = document.getElementById('paper-invitation-current');
+
+            resetImageTransform();
+            img.src = CONFIG.paperInvitation.images[currentPaperInvitationIndex];
+            current.textContent = currentPaperInvitationIndex + 1;
+        }
+
+        function resetImageTransform() {
+            paperInvitationScale = 1;
+            paperInvitationTranslateX = 0;
+            paperInvitationTranslateY = 0;
+            updateImageTransform();
+        }
+
+        function updateImageTransform() {
+            const img = document.getElementById('paper-invitation-img');
+            img.style.transform = `scale(${paperInvitationScale}) translate(${paperInvitationTranslateX}px, ${paperInvitationTranslateY}px)`;
+            img.style.cursor = paperInvitationScale > 1 ? 'grab' : 'zoom-in';
+        }
+
+        // 初始化觸控手勢
+        function initPaperInvitationGestures() {
+            if (typeof Hammer === 'undefined') return; // 如果 Hammer.js 沒載入就跳過
+
+            const img = document.getElementById('paper-invitation-img');
+
+            // 如果已經初始化過，先移除
+            if (img.hammerInstance) {
+                img.hammerInstance.destroy();
+            }
+
+            const hammer = new Hammer(img);
+            img.hammerInstance = hammer;
+
+            // 啟用縮放和拖曳
+            hammer.get('pinch').set({ enable: true });
+            hammer.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+
+            let lastScale = 1;
+            let lastTranslateX = 0;
+            let lastTranslateY = 0;
+
+            // 雙指縮放
+            hammer.on('pinchstart', function(e) {
+                lastScale = paperInvitationScale;
+            });
+
+            hammer.on('pinchmove', function(e) {
+                paperInvitationScale = Math.max(1, Math.min(lastScale * e.scale, 4));
+                updateImageTransform();
+            });
+
+            hammer.on('pinchend', function(e) {
+                if (paperInvitationScale < 1.1) {
+                    resetImageTransform();
+                }
+            });
+
+            // 拖曳移動（放大後）
+            hammer.on('panstart', function(e) {
+                lastTranslateX = paperInvitationTranslateX;
+                lastTranslateY = paperInvitationTranslateY;
+                img.style.cursor = 'grabbing';
+            });
+
+            hammer.on('panmove', function(e) {
+                if (paperInvitationScale > 1) {
+                    paperInvitationTranslateX = lastTranslateX + e.deltaX / paperInvitationScale;
+                    paperInvitationTranslateY = lastTranslateY + e.deltaY / paperInvitationScale;
+                    updateImageTransform();
+                }
+            });
+
+            hammer.on('panend', function(e) {
+                img.style.cursor = paperInvitationScale > 1 ? 'grab' : 'zoom-in';
+            });
+
+            // 左右滑動切換頁面（未放大時）
+            hammer.on('swipeleft', function(e) {
+                if (paperInvitationScale <= 1) {
+                    changePaperInvitationImage(1);
+                }
+            });
+
+            hammer.on('swiperight', function(e) {
+                if (paperInvitationScale <= 1) {
+                    changePaperInvitationImage(-1);
+                }
+            });
+
+            // 雙擊縮放
+            hammer.on('doubletap', function(e) {
+                if (paperInvitationScale > 1) {
+                    resetImageTransform();
+                } else {
+                    paperInvitationScale = 2.5;
+                    // 根據點擊位置調整中心
+                    const rect = img.getBoundingClientRect();
+                    const x = e.center.x - rect.left - rect.width / 2;
+                    const y = e.center.y - rect.top - rect.height / 2;
+                    paperInvitationTranslateX = -x / 2;
+                    paperInvitationTranslateY = -y / 2;
+                    updateImageTransform();
+                }
+            });
+        }
+
+        // 鍵盤快捷鍵（電腦）
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('paper-invitation-lightbox');
+            if (!lightbox.classList.contains('active')) return;
+
+            if (e.key === 'Escape') {
+                closePaperInvitation();
+            } else if (e.key === 'ArrowLeft') {
+                changePaperInvitationImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                changePaperInvitationImage(1);
+            }
+        });
+
+        // 點擊背景關閉（防止誤觸）
+        document.getElementById('paper-invitation-lightbox').addEventListener('click', function(e) {
+            if (e.target === this && paperInvitationScale <= 1) {
+                closePaperInvitation();
+            }
+        });
     </script>
 
     <!-- 留言板功能 -->

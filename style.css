@@ -987,15 +987,17 @@ section {
 
 .link-cards {
     display: flex;
-    gap: 3rem;
-    max-width: 1000px;
+    gap: 2rem;
+    max-width: 1400px;
     width: 100%;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .link-box {
     flex: 1;
-    max-width: 400px;
+    min-width: 280px;
+    max-width: 380px;
     background-color: white;
     padding: 3rem 2rem;
     border-radius: 15px;
@@ -1900,5 +1902,141 @@ section {
     .message-content {
         padding-left: 0;
         margin-top: 0.5rem;
+    }
+}
+
+/* ========== 紙本喜帖 Lightbox（手機友好版）========== */
+.paper-invitation-lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    touch-action: none; /* 防止瀏覽器預設手勢 */
+}
+
+.paper-invitation-lightbox.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+.paper-invitation-lightbox .lightbox-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.paper-invitation-lightbox img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    cursor: zoom-in;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center center;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.paper-invitation-lightbox .lightbox-hint {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 0.6rem 1.2rem;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+    pointer-events: none;
+    line-height: 1.6;
+    max-width: 90%;
+}
+
+/* 手機版優化 */
+@media (max-width: 768px) {
+    .paper-invitation-lightbox .lightbox-content {
+        padding: 1rem 0.5rem;
+    }
+
+    .paper-invitation-lightbox img {
+        max-height: 90vh; /* 手機上顯示更大 */
+        max-width: 95vw;
+        border-radius: 5px;
+    }
+
+    .paper-invitation-lightbox .lightbox-hint {
+        font-size: 0.7rem;
+        bottom: 90px;
+        padding: 0.5rem 1rem;
+        line-height: 1.5;
+    }
+
+    /* 手機版：箭頭放大且增加點擊區域 */
+    .paper-invitation-lightbox .lightbox-prev,
+    .paper-invitation-lightbox .lightbox-next {
+        font-size: 2.5rem;
+        width: 70px;
+        height: 70px;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .paper-invitation-lightbox .lightbox-prev {
+        left: 0;
+    }
+
+    .paper-invitation-lightbox .lightbox-next {
+        right: 0;
+    }
+}
+
+/* 平板橫向 */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+    .paper-invitation-lightbox img {
+        max-height: 85vh;
+        max-width: 60vw;
+    }
+}
+
+/* 平板直向 */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+    .paper-invitation-lightbox img {
+        max-height: 80vh;
+        max-width: 85vw;
+    }
+}
+
+/* 小手機（iPhone SE 等）*/
+@media (max-width: 375px) {
+    .paper-invitation-lightbox img {
+        max-height: 88vh;
+    }
+
+    .paper-invitation-lightbox .lightbox-hint {
+        font-size: 0.65rem;
+        bottom: 100px;
+    }
+}
+
+/* 超大螢幕 */
+@media (min-width: 1920px) {
+    .paper-invitation-lightbox .lightbox-content {
+        max-width: 1400px;
     }
 }
