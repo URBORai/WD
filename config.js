@@ -84,7 +84,7 @@ const CONFIG = {
             description: "享用美味佳餚"
         },
         {
-            time: "13:00",
+            time: "12:30",
             title: "婚宴開始",
             description: "與賓客互動交流"
         },
