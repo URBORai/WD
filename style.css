@@ -2040,3 +2040,406 @@ section {
         max-width: 1400px;
     }
 }
+
+/* ========== 平板響應式設計 (769px - 1024px) ========== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* 導航列平板優化 */
+    .main-nav {
+        gap: 1.2rem;
+        padding: 1rem 1.5rem;
+    }
+
+    .main-nav a {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .music-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 1.2rem;
+    }
+
+    /* 首頁區塊平板優化 */
+    .couple-names {
+        font-size: 3.2rem;
+    }
+
+    .wedding-date {
+        font-size: 1.5rem;
+    }
+
+    .tagline {
+        font-size: 1.1rem;
+    }
+
+    /* 通用左右分塊平板優化 */
+    .split-container {
+        gap: 3rem;
+        padding: 0 1.5rem;
+    }
+
+    .split-content h2 {
+        font-size: 2.2rem;
+    }
+
+    .split-content p {
+        font-size: 1rem;
+    }
+
+    .split-image {
+        min-height: 350px;
+    }
+
+    /* 新人介紹平板優化 */
+    .profile-container h2 {
+        font-size: 2.2rem;
+    }
+
+    .profile-card {
+        gap: 2rem;
+        padding: 2.5rem;
+    }
+
+    .profile-photo {
+        flex: 0 0 300px;
+        height: 380px;
+    }
+
+    .profile-name {
+        font-size: 2rem;
+    }
+
+    .profile-title {
+        font-size: 1.1rem;
+    }
+
+    .profile-description {
+        font-size: 1rem;
+    }
+
+    .hobby-tag {
+        font-size: 0.9rem;
+        padding: 0.45rem 1.1rem;
+    }
+
+    .profile-quote {
+        font-size: 1rem;
+    }
+
+    /* 婚禮進程平板優化 */
+    .timeline-content h2 {
+        font-size: 2.2rem;
+        margin-bottom: 50px;
+    }
+
+    .timeline-item {
+        margin-bottom: 50px;
+    }
+
+    .timeline-details {
+        padding: 20px 25px;
+        margin-left: 50px;
+    }
+
+    .timeline-details h3 {
+        font-size: 1.3rem;
+    }
+
+    .timeline-details p {
+        font-size: 0.95rem;
+    }
+
+    .timeline-time {
+        flex: 0 0 70px;
+        font-size: 1rem;
+    }
+
+    /* 連結區塊平板優化 */
+    .links-section h2 {
+        font-size: 2.2rem;
+    }
+
+    .link-cards {
+        gap: 1.5rem;
+        max-width: 900px;
+    }
+
+    .link-box {
+        min-width: 240px;
+        max-width: 320px;
+        padding: 2.5rem 1.8rem;
+    }
+
+    .card-icon {
+        font-size: 3rem;
+    }
+
+    .link-box h3 {
+        font-size: 1.4rem;
+    }
+
+    .link-box p {
+        font-size: 0.95rem;
+    }
+
+    /* 地點區塊平板優化 */
+    .venue-container h2 {
+        font-size: 2.2rem;
+    }
+
+    .venue-container .location-buttons {
+        gap: 1.2rem;
+    }
+
+    .venue-container .location-btn {
+        font-size: 1rem;
+        padding: 1.1rem 1.8rem;
+        max-width: 300px;
+    }
+
+    .map-preview {
+        height: 450px;
+    }
+
+    /* 留言板平板優化 */
+    .guestbook-container h2 {
+        font-size: 2.2rem;
+    }
+
+    .guestbook-subtitle {
+        font-size: 1rem;
+    }
+
+    .message-form-wrapper {
+        padding: 1.8rem;
+    }
+
+    .message-card {
+        padding: 1.4rem;
+    }
+
+    .message-avatar {
+        font-size: 2.3rem;
+        width: 3.3rem;
+        height: 3.3rem;
+    }
+
+    .message-content {
+        font-size: 1rem;
+        padding-left: 4rem;
+    }
+
+    /* 幻燈片平板優化 */
+    .slideshow-container {
+        min-height: 380px;
+    }
+
+    /* 愛情故事平板優化 */
+    .love-story-section > h2 {
+        font-size: 2.2rem;
+        margin-bottom: 4rem;
+    }
+
+    .story-block {
+        gap: 3rem;
+    }
+
+    .story-image {
+        max-height: 350px;
+    }
+
+    .story-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .story-content p {
+        font-size: 1rem;
+    }
+
+    /* 婚紗照平板優化 */
+    .photos-intro h2 {
+        font-size: 2.2rem;
+    }
+
+    .photos-intro p {
+        font-size: 1rem;
+    }
+
+    .photos-gallery {
+        gap: 1.2rem;
+    }
+}
+
+/* ========== 平板直向模式專用優化 ========== */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+    /* 導航列在直向模式下更緊湊 */
+    .main-nav {
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    .main-nav a {
+        font-size: 0.85rem;
+        padding: 0.45rem 0.7rem;
+    }
+
+    /* 左右分塊在直向改為上下排列 */
+    .split-container {
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .split-image {
+        max-height: 400px;
+    }
+
+    /* 新人介紹卡片在直向改為上下排列 */
+    .profile-card {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .profile-photo {
+        flex: auto;
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    .profile-info {
+        padding: 0;
+        text-align: center;
+    }
+
+    .hobbies-list {
+        justify-content: center;
+    }
+
+    .profile-quote {
+        text-align: left;
+    }
+
+    /* 連結卡片在直向模式下堆疊 */
+    .link-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .link-box {
+        max-width: 500px;
+        width: 100%;
+    }
+
+    /* 地點按鈕在直向模式下改為垂直排列 */
+    .venue-container .location-buttons {
+        flex-direction: column;
+        max-width: 500px;
+        margin: 0 auto 2.5rem;
+    }
+
+    .venue-container .location-btn {
+        max-width: 100%;
+    }
+
+    /* 婚禮資訊在直向模式下垂直排列 */
+    .wedding-info-inline {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    /* 愛情故事在直向改為上下排列 */
+    .story-block,
+    .story-block.reverse {
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    /* 婚紗照在直向模式下改為單欄 */
+    .photos-container {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .photos-intro {
+        flex: auto;
+        text-align: center;
+    }
+
+    .photos-gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ========== 平板橫向模式專用優化 ========== */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+    /* 確保導航列不會太擠 */
+    .main-nav {
+        gap: 1rem;
+    }
+
+    .main-nav a {
+        font-size: 0.88rem;
+    }
+
+    /* 保持左右分塊橫向排列但調整比例 */
+    .split-container {
+        gap: 2.5rem;
+    }
+
+    .split-content {
+        flex: 1.2;
+    }
+
+    .split-image {
+        flex: 0.8;
+        min-height: 320px;
+    }
+
+    /* 新人介紹保持橫向但調整尺寸 */
+    .profile-photo {
+        flex: 0 0 280px;
+        height: 360px;
+    }
+
+    /* Timeline 在橫向模式下更緊湊 */
+    .timeline-item {
+        margin-bottom: 40px;
+    }
+
+    .timeline-details {
+        padding: 18px 22px;
+        margin-left: 45px;
+    }
+
+    /* 地圖高度調整 */
+    .map-preview {
+        height: 400px;
+    }
+
+    /* 連結卡片在橫向保持橫排 */
+    .link-cards {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .link-box {
+        flex: 1 1 calc(50% - 1rem);
+        min-width: 280px;
+    }
+
+    /* 愛情故事保持橫向排列 */
+    .story-block,
+    .story-block.reverse {
+        flex-direction: row;
+    }
+
+    .story-block.reverse {
+        flex-direction: row-reverse;
+    }
+
+    /* 婚紗照保持橫向排列 */
+    .photos-container {
+        flex-direction: row;
+    }
+}
