@@ -27,7 +27,7 @@
         <a href="#about" class="nav-link">關於我們</a>
         <a href="#timeline" class="nav-link">婚禮進程</a>
         <a href="#guestbook" class="nav-link">留言祝福</a>
-        <a href="#links" class="nav-link">回覆出席</a>
+        <a href="#links" class="nav-link" id="rsvp-or-schedule-link">回覆出席</a>
         <a href="#venue" class="nav-link">地點</a>
         <a href="#paper-invitation" class="nav-link">紙本喜帖</a>
         <button id="music-toggle" class="music-btn" aria-label="播放/暫停音樂">
@@ -302,6 +302,23 @@
         <div class="lightbox-hint">
             💡 手機：左右滑動切換 · 雙指縮放查看 · 雙擊快速縮放<br>
             電腦：左右鍵切換 · 滑鼠滾輪縮放 · ESC 關閉
+        </div>
+    </div>
+
+    <!-- 儀節表 Lightbox -->
+    <div class="ceremony-schedule-lightbox" id="ceremony-schedule-lightbox">
+        <div class="lightbox-close" onclick="closeCeremonySchedule()">×</div>
+        <div class="lightbox-prev" onclick="changeCeremonyScheduleImage(-1)">‹</div>
+        <div class="lightbox-next" onclick="changeCeremonyScheduleImage(1)">›</div>
+        <div class="lightbox-content">
+            <img id="ceremony-schedule-img" src="" alt="婚禮儀節表">
+        </div>
+        <div class="lightbox-counter">
+            <span id="ceremony-schedule-current">1</span> / <span id="ceremony-schedule-total">2</span>
+        </div>
+        <div class="lightbox-hint">
+            💡 手機：左右滑動切換 · 雙指縮放查看<br>
+            電腦：左右鍵切換 · ESC 關閉
         </div>
     </div>
 
@@ -713,11 +730,15 @@
             // 初始化地點按鈕
             initLocationButtons();
 
-            // 顯示 SweetAlert2 彈窗
+            // 判斷是否在特殊期間
+            function isSpecialPeriod() {
+                return true;
+            }
+
+            // 顯示歡迎彈窗
             Swal.fire({
                 title: CONFIG.welcomePopup.title,
                 html: CONFIG.welcomePopup.text.replace(/\n/g, '<br>'),
-                //icon: 'heart',
                 confirmButtonText: '進入',
                 confirmButtonColor: '#d4a574',
                 allowOutsideClick: false,
@@ -739,8 +760,38 @@
                 if (result.isConfirmed) {
                     // 播放背景音樂並淡入
                     fadeInMusic();
+
+                    // 如果在特殊期間，顯示第二個彈窗
+                    if (isSpecialPeriod()) {
+                        setTimeout(() => {
+                            showCeremonySchedulePrompt();
+                        }, 500);
+                    }
                 }
             });
+
+            // 第二彈窗：詢問是否查看儀節表
+            function showCeremonySchedulePrompt() {
+                Swal.fire({
+                    title: '🎊 婚禮儀節表',
+                    html: '婚禮即將開始！<br>是否查看詳細儀節表？',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: '查看儀節表',
+                    cancelButtonText: '稍後再說',
+                    confirmButtonColor: '#d4a574',
+                    cancelButtonColor: '#999',
+                    customClass: {
+                        popup: 'custom-popup',
+                        confirmButton: 'custom-confirm-button',
+                        cancelButton: 'custom-cancel-button'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        openCeremonySchedule(0);
+                    }
+                });
+            }
         });
 
         // 音樂淡入函式
@@ -997,6 +1048,119 @@
         document.getElementById('paper-invitation-lightbox').addEventListener('click', function(e) {
             if (e.target === this && paperInvitationScale <= 1) {
                 closePaperInvitation();
+            }
+        });
+    </script>
+
+    <script>
+        // ========== 婚禮儀節表 Lightbox ==========
+        let currentCeremonyScheduleIndex = 0;
+
+        // 更新導航列按鈕（根據時間）
+        function updateRSVPLink() {
+            const link = document.getElementById('rsvp-or-schedule-link');
+            if (!link) return;
+
+            if (isSpecialPeriod()) {
+                // 特殊期間：改成「婚禮儀節表」
+                link.textContent = '婚禮儀節表';
+                link.href = '#ceremony-schedule';
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openCeremonySchedule(0);
+                });
+            } else {
+                // 平常：保持「回覆出席」
+                link.textContent = '回覆出席';
+                link.href = '#links';
+            }
+        }
+
+        // 頁面載入時執行
+        document.addEventListener('DOMContentLoaded', function() {
+            updateRSVPLink();
+        });
+
+        function openCeremonySchedule(index) {
+            const lightbox = document.getElementById('ceremony-schedule-lightbox');
+            const img = document.getElementById('ceremony-schedule-img');
+            const current = document.getElementById('ceremony-schedule-current');
+            const total = document.getElementById('ceremony-schedule-total');
+
+            currentCeremonyScheduleIndex = index;
+
+            img.src = CONFIG.ceremonySchedule.images[index];
+            current.textContent = index + 1;
+            total.textContent = CONFIG.ceremonySchedule.images.length;
+
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // 初始化觸控手勢
+            setTimeout(() => initCeremonyScheduleGestures(), 100);
+        }
+
+        function closeCeremonySchedule() {
+            const lightbox = document.getElementById('ceremony-schedule-lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function changeCeremonyScheduleImage(direction) {
+            const total = CONFIG.ceremonySchedule.images.length;
+            currentCeremonyScheduleIndex = (currentCeremonyScheduleIndex + direction + total) % total;
+
+            const img = document.getElementById('ceremony-schedule-img');
+            const current = document.getElementById('ceremony-schedule-current');
+
+            img.src = CONFIG.ceremonySchedule.images[currentCeremonyScheduleIndex];
+            current.textContent = currentCeremonyScheduleIndex + 1;
+        }
+
+        // 初始化觸控手勢（複用紙本喜帖的邏輯）
+        function initCeremonyScheduleGestures() {
+            if (typeof Hammer === 'undefined') return;
+
+            const img = document.getElementById('ceremony-schedule-img');
+
+            if (img.hammerInstance) {
+                img.hammerInstance.destroy();
+            }
+
+            const hammer = new Hammer(img);
+            img.hammerInstance = hammer;
+
+            hammer.get('pinch').set({ enable: true });
+            hammer.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+
+            // 左右滑動切換
+            hammer.on('swipeleft', function(e) {
+                changeCeremonyScheduleImage(1);
+            });
+
+            hammer.on('swiperight', function(e) {
+                changeCeremonyScheduleImage(-1);
+            });
+        }
+
+        // 鍵盤快捷鍵
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('ceremony-schedule-lightbox');
+            if (!lightbox.classList.contains('active')) return;
+
+            if (e.key === 'Escape') {
+                closeCeremonySchedule();
+            } else if (e.key === 'ArrowLeft') {
+                changeCeremonyScheduleImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeCeremonyScheduleImage(1);
+            }
+        });
+
+        // 點擊背景關閉
+        document.getElementById('ceremony-schedule-lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCeremonySchedule();
             }
         });
     </script>

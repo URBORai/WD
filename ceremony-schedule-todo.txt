@@ -1,0 +1,694 @@
+# 婚禮儀節表功能實作 TODO
+
+## 📋 任務概述
+在婚禮網站加入「婚禮儀節表」功能，根據時間自動切換顯示內容。
+
+專案位置：D:\WD\主要區域\文書\喜帖2.0\
+
+---
+
+## 🎯 功能需求
+
+### 時間邏輯
+
+1. **平常（2026/2/7 12:00 之前）**
+   - 歡迎彈窗：只有「進入」按鈕
+   - 導航列：「回覆出席」→ Google 表單
+
+2. **特殊期間（2026/2/7 12:00 ~ 2026/2/8 12:00）**
+   - 歡迎彈窗：只有「進入」按鈕
+   - 第二彈窗：「是否查看婚禮儀節表？」（「查看」/「稍後再說」）
+   - 導航列：「婚禮儀節表」→ 彈出儀節表圖片
+
+3. **婚禮後（2026/2/8 12:00 之後）**
+   - 歡迎彈窗：只有「進入」按鈕
+   - 導航列：「回覆出席」→ Google 表單
+
+---
+
+## 📁 任務一：準備圖片（手動）
+
+**請使用者手動完成：**
+
+1. 把儀節表的兩張 JPG 圖片放到：
+   D:\WD\主要區域\文書\喜帖2.0\圖片\
+
+2. 檔案命名：
+   - 儀節表_第1頁.jpg
+   - 儀節表_第2頁.jpg
+
+3. 建議圖片規格：
+   - 尺寸：寬度 1200px（A4 直式比例）
+   - 格式：JPG
+   - 品質：80%
+   - 大小：每張 < 500 KB（用 TinyPNG 壓縮）
+
+---
+
+## 📝 任務二：修改 config.js
+
+**檔案：config.js**
+
+**在檔案最後（最後一個 `}` 之前）加上：**
+
+```javascript
+    // 婚禮儀節表
+    ceremonySchedule: {
+        images: [
+            './圖片/儀節表_第1頁.jpg',
+            './圖片/儀節表_第2頁.jpg'
+        ],
+        // 特殊期間：2026/2/7 12:00 ~ 2026/2/8 12:00
+        startTime: new Date('2026-02-07T12:00:00'),
+        endTime: new Date('2026-02-08T12:00:00')
+    }
+```
+
+**注意：**
+- 確保在最後一個屬性後面加逗號
+- 如果已經有 `paperInvitation`，在它後面加逗號，再加 `ceremonySchedule`
+
+**完整位置示意：**
+
+```javascript
+const CONFIG = {
+    couple: { ... },
+    wedding: { ... },
+    // ... 其他設定 ...
+    
+    paperInvitation: {
+        images: [
+            './圖片/紙本喜帖_第1頁.jpg',
+            './圖片/紙本喜帖_第2頁.jpg'
+        ]
+    },  // ← 確保這裡有逗號
+    
+    // 婚禮儀節表（加在這裡）
+    ceremonySchedule: {
+        images: [
+            './圖片/儀節表_第1頁.jpg',
+            './圖片/儀節表_第2頁.jpg'
+        ],
+        startTime: new Date('2026-02-07T12:00:00'),
+        endTime: new Date('2026-02-08T12:00:00')
+    }
+};
+```
+
+---
+
+## 📝 任務三：修改 index.html
+
+**檔案：index.html**
+
+### 3.1 修改導航列按鈕
+
+**找到導航列（約第 28 行）：**
+
+**原本：**
+```html
+<a href="#links" class="nav-link">回覆出席</a>
+```
+
+**改成：**
+```html
+<a href="#links" class="nav-link" id="rsvp-or-schedule-link">回覆出席</a>
+```
+
+---
+
+### 3.2 加上儀節表 Lightbox HTML
+
+**找到紙本喜帖 Lightbox 後面（約第 260 行），加上：**
+
+```html
+<!-- 儀節表 Lightbox -->
+<div class="ceremony-schedule-lightbox" id="ceremony-schedule-lightbox">
+    <div class="lightbox-close" onclick="closeCeremonySchedule()">×</div>
+    <div class="lightbox-prev" onclick="changeCeremonyScheduleImage(-1)">‹</div>
+    <div class="lightbox-next" onclick="changeCeremonyScheduleImage(1)">›</div>
+    <div class="lightbox-content">
+        <img id="ceremony-schedule-img" src="" alt="婚禮儀節表">
+    </div>
+    <div class="lightbox-counter">
+        <span id="ceremony-schedule-current">1</span> / <span id="ceremony-schedule-total">2</span>
+    </div>
+    <div class="lightbox-hint">
+        💡 手機：左右滑動切換 · 雙指縮放查看<br>
+        電腦：左右鍵切換 · ESC 關閉
+    </div>
+</div>
+```
+
+---
+
+### 3.3 修改歡迎彈窗邏輯
+
+**找到現有的 SweetAlert2 彈窗代碼（約第 571 行），完全替換成：**
+
+```javascript
+// 判斷是否在特殊期間
+function isSpecialPeriod() {
+    const now = new Date();
+    const startTime = CONFIG.ceremonySchedule.startTime;
+    const endTime = CONFIG.ceremonySchedule.endTime;
+    return now >= startTime && now <= endTime;
+}
+
+// 顯示歡迎彈窗
+Swal.fire({
+    title: CONFIG.welcomePopup.title,
+    html: CONFIG.welcomePopup.text.replace(/\n/g, '<br>'),
+    confirmButtonText: '進入',
+    confirmButtonColor: '#d4a574',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showClass: {
+        popup: 'animate__animated animate__fadeInDown animate__faster'
+    },
+    hideClass: {
+        popup: 'animate__animated animate__fadeOutUp animate__faster'
+    },
+    customClass: {
+        popup: 'custom-popup',
+        title: 'custom-title',
+        htmlContainer: 'custom-text',
+        confirmButton: 'custom-confirm-button'
+    },
+    backdrop: 'rgba(0,0,0,0.7)'
+}).then((result) => {
+    if (result.isConfirmed) {
+        // 播放背景音樂並淡入
+        fadeInMusic();
+        
+        // 如果在特殊期間，顯示第二個彈窗
+        if (isSpecialPeriod()) {
+            setTimeout(() => {
+                showCeremonySchedulePrompt();
+            }, 500);
+        }
+    }
+});
+
+// 第二彈窗：詢問是否查看儀節表
+function showCeremonySchedulePrompt() {
+    Swal.fire({
+        title: '🎊 婚禮儀節表',
+        html: '婚禮即將開始！<br>是否查看詳細儀節表？',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '查看儀節表',
+        cancelButtonText: '稍後再說',
+        confirmButtonColor: '#d4a574',
+        cancelButtonColor: '#999',
+        customClass: {
+            popup: 'custom-popup',
+            confirmButton: 'custom-confirm-button',
+            cancelButton: 'custom-cancel-button'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            openCeremonySchedule(0);
+        }
+    });
+}
+```
+
+---
+
+### 3.4 加上儀節表 JavaScript
+
+**在紙本喜帖 JavaScript 之後（約第 750 行），加上：**
+
+```javascript
+// ========== 婚禮儀節表 Lightbox ==========
+let currentCeremonyScheduleIndex = 0;
+
+// 更新導航列按鈕（根據時間）
+function updateRSVPLink() {
+    const link = document.getElementById('rsvp-or-schedule-link');
+    if (!link) return;
+    
+    if (isSpecialPeriod()) {
+        // 特殊期間：改成「婚禮儀節表」
+        link.textContent = '婚禮儀節表';
+        link.href = '#ceremony-schedule';
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            openCeremonySchedule(0);
+        });
+    } else {
+        // 平常：保持「回覆出席」
+        link.textContent = '回覆出席';
+        link.href = '#links';
+    }
+}
+
+// 頁面載入時執行
+document.addEventListener('DOMContentLoaded', function() {
+    updateRSVPLink();
+});
+
+function openCeremonySchedule(index) {
+    const lightbox = document.getElementById('ceremony-schedule-lightbox');
+    const img = document.getElementById('ceremony-schedule-img');
+    const current = document.getElementById('ceremony-schedule-current');
+    const total = document.getElementById('ceremony-schedule-total');
+
+    currentCeremonyScheduleIndex = index;
+    
+    img.src = CONFIG.ceremonySchedule.images[index];
+    current.textContent = index + 1;
+    total.textContent = CONFIG.ceremonySchedule.images.length;
+
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // 初始化觸控手勢
+    setTimeout(() => initCeremonyScheduleGestures(), 100);
+}
+
+function closeCeremonySchedule() {
+    const lightbox = document.getElementById('ceremony-schedule-lightbox');
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function changeCeremonyScheduleImage(direction) {
+    const total = CONFIG.ceremonySchedule.images.length;
+    currentCeremonyScheduleIndex = (currentCeremonyScheduleIndex + direction + total) % total;
+
+    const img = document.getElementById('ceremony-schedule-img');
+    const current = document.getElementById('ceremony-schedule-current');
+
+    img.src = CONFIG.ceremonySchedule.images[currentCeremonyScheduleIndex];
+    current.textContent = currentCeremonyScheduleIndex + 1;
+}
+
+// 初始化觸控手勢（複用紙本喜帖的邏輯）
+function initCeremonyScheduleGestures() {
+    if (typeof Hammer === 'undefined') return;
+    
+    const img = document.getElementById('ceremony-schedule-img');
+    
+    if (img.hammerInstance) {
+        img.hammerInstance.destroy();
+    }
+    
+    const hammer = new Hammer(img);
+    img.hammerInstance = hammer;
+    
+    hammer.get('pinch').set({ enable: true });
+    hammer.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+    
+    // 左右滑動切換
+    hammer.on('swipeleft', function(e) {
+        changeCeremonyScheduleImage(1);
+    });
+    
+    hammer.on('swiperight', function(e) {
+        changeCeremonyScheduleImage(-1);
+    });
+}
+
+// 鍵盤快捷鍵
+document.addEventListener('keydown', function(e) {
+    const lightbox = document.getElementById('ceremony-schedule-lightbox');
+    if (!lightbox.classList.contains('active')) return;
+
+    if (e.key === 'Escape') {
+        closeCeremonySchedule();
+    } else if (e.key === 'ArrowLeft') {
+        changeCeremonyScheduleImage(-1);
+    } else if (e.key === 'ArrowRight') {
+        changeCeremonyScheduleImage(1);
+    }
+});
+
+// 點擊背景關閉
+document.getElementById('ceremony-schedule-lightbox').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeCeremonySchedule();
+    }
+});
+```
+
+---
+
+## 📝 任務四：修改 style.css
+
+**檔案：style.css**
+
+**在檔案最後加上：**
+
+```css
+/* ========== 婚禮儀節表 Lightbox ========== */
+.ceremony-schedule-lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    touch-action: none;
+}
+
+.ceremony-schedule-lightbox.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+.ceremony-schedule-lightbox .lightbox-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.ceremony-schedule-lightbox img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    cursor: zoom-in;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center center;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.ceremony-schedule-lightbox .lightbox-hint {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 0.6rem 1.2rem;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 20px;
+    pointer-events: none;
+    line-height: 1.6;
+    max-width: 90%;
+}
+
+/* 第二彈窗的取消按鈕樣式 */
+.custom-cancel-button {
+    background-color: #999 !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.75rem 2rem !important;
+    font-size: 1rem !important;
+    border-radius: 50px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.custom-cancel-button:hover {
+    background-color: #777 !important;
+    transform: translateY(-2px) !important;
+}
+
+/* 手機版優化 */
+@media (max-width: 768px) {
+    .ceremony-schedule-lightbox .lightbox-content {
+        padding: 1rem 0.5rem;
+    }
+
+    .ceremony-schedule-lightbox img {
+        max-height: 90vh;
+        max-width: 95vw;
+        border-radius: 5px;
+    }
+
+    .ceremony-schedule-lightbox .lightbox-hint {
+        font-size: 0.7rem;
+        bottom: 90px;
+        padding: 0.5rem 1rem;
+        line-height: 1.5;
+    }
+
+    .ceremony-schedule-lightbox .lightbox-prev,
+    .ceremony-schedule-lightbox .lightbox-next {
+        font-size: 2.5rem;
+        width: 70px;
+        height: 70px;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* 平板優化 */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .ceremony-schedule-lightbox img {
+        max-height: 85vh;
+        max-width: 70vw;
+    }
+}
+```
+
+---
+
+## ✅ 測試清單
+
+### 本地測試（修改完成後）
+
+#### 測試 1：平常時期（2/7 12:00 之前）
+
+**暫時修改測試：**
+```javascript
+// 在 isSpecialPeriod() 函數裡
+function isSpecialPeriod() {
+    return false; // 強制非特殊期間
+}
+```
+
+**測試項目：**
+```
+□ 只有一個歡迎彈窗
+□ 彈窗只有「進入」按鈕
+□ 導航列顯示「回覆出席」
+□ 點「回覆出席」跳轉到 Google 表單區塊
+```
+
+---
+
+#### 測試 2：特殊期間（2/7 12:00 ~ 2/8 12:00）
+
+**暫時修改測試：**
+```javascript
+// 在 isSpecialPeriod() 函數裡
+function isSpecialPeriod() {
+    return true; // 強制特殊期間
+}
+```
+
+**測試項目：**
+```
+□ 第一個彈窗：歡迎彈窗（只有「進入」）
+□ 點「進入」後出現第二個彈窗
+□ 第二彈窗：「是否查看婚禮儀節表？」
+□ 有「查看儀節表」和「稍後再說」兩個按鈕
+□ 點「查看儀節表」→ 彈出儀節表圖片
+□ 點「稍後再說」→ 關閉，正常瀏覽
+□ 導航列顯示「婚禮儀節表」
+□ 點導航列「婚禮儀節表」→ 彈出儀節表圖片
+```
+
+**儀節表 Lightbox 測試：**
+```
+□ 顯示第一張圖片
+□ 左右箭頭能切換
+□ 頁碼顯示正確（1/2、2/2）
+□ ESC 能關閉
+□ 點背景能關閉
+□ 左右鍵能切換（電腦）
+```
+
+**手機測試：**
+```
+□ 左右滑動切換
+□ 圖片清晰顯示
+□ 響應式排版正常
+```
+
+---
+
+#### 測試 3：婚禮後（2/8 12:00 之後）
+
+**暫時修改測試：**
+```javascript
+// 在 isSpecialPeriod() 函數裡
+function isSpecialPeriod() {
+    return false; // 強制非特殊期間
+}
+```
+
+**測試項目：**
+```
+□ 只有一個歡迎彈窗
+□ 導航列顯示「回覆出席」
+```
+
+---
+
+### 測試完記得改回正式版！
+
+**config.js 裡保持：**
+```javascript
+ceremonySchedule: {
+    images: [...],
+    startTime: new Date('2026-02-07T12:00:00'),
+    endTime: new Date('2026-02-08T12:00:00')
+}
+```
+
+**index.html 裡保持：**
+```javascript
+function isSpecialPeriod() {
+    const now = new Date();
+    const startTime = CONFIG.ceremonySchedule.startTime;
+    const endTime = CONFIG.ceremonySchedule.endTime;
+    return now >= startTime && now <= endTime;
+}
+```
+
+---
+
+## 📤 部署上線
+
+### 推到 GitHub
+
+```bash
+cd /d "D:\WD\主要區域\文書\喜帖2.0"
+
+git add .
+git commit -m "新增婚禮儀節表功能（時間自動切換）"
+git push
+```
+
+### Vercel 自動部署
+
+- Vercel 會自動偵測 GitHub 更新
+- 約 30 秒後自動上線
+- 測試線上版功能
+
+---
+
+## 🎯 完成標準
+
+### 功能完整性
+
+```
+✅ 平常時期：單一歡迎彈窗
+✅ 特殊期間：雙層彈窗系統
+✅ 第二彈窗有兩個按鈕選項
+✅ 導航列按鈕根據時間自動切換
+✅ 儀節表 Lightbox 正常顯示
+✅ 圖片可左右切換
+✅ 手機支援滑動
+✅ 響應式設計完整
+✅ Console 沒有錯誤
+```
+
+### 時間邏輯
+
+```
+✅ 2/7 12:00 之前：平常模式
+✅ 2/7 12:00 ~ 2/8 12:00：特殊模式
+✅ 2/8 12:00 之後：平常模式
+```
+
+---
+
+## 📝 注意事項
+
+1. **圖片檔案名稱必須正確：**
+   - 儀節表_第1頁.jpg
+   - 儀節表_第2頁.jpg
+   - 放在 `圖片/` 資料夾
+
+2. **時間設定：**
+   - startTime: 2026-02-07T12:00:00（2/7 中午 12 點）
+   - endTime: 2026-02-08T12:00:00（2/8 中午 12 點）
+   - 時區：系統本地時間
+
+3. **測試時記得改回正式版：**
+   - 不要把測試用的 `return true/false` 推到 GitHub
+   - 確保使用正確的時間判斷邏輯
+
+4. **導航列按鈕：**
+   - 確保有 `id="rsvp-or-schedule-link"`
+   - JavaScript 會自動更新文字和連結
+
+---
+
+## 🐛 常見問題排除
+
+### 問題 1：導航列按鈕沒有切換
+
+**檢查：**
+- `id="rsvp-or-schedule-link"` 是否正確
+- `updateRSVPLink()` 是否在 DOMContentLoaded 執行
+- Console 有沒有錯誤
+
+### 問題 2：第二彈窗沒有出現
+
+**檢查：**
+- `isSpecialPeriod()` 是否返回 true
+- `showCeremonySchedulePrompt()` 是否被呼叫
+- SweetAlert2 是否載入成功
+
+### 問題 3：儀節表圖片無法顯示
+
+**檢查：**
+- 圖片檔案是否在 `圖片/` 資料夾
+- 檔案名稱是否正確
+- config.js 的路徑是否正確
+
+### 問題 4：時間判斷不正確
+
+**檢查：**
+- 電腦系統時間是否正確
+- config.js 的 startTime 和 endTime 格式
+- 是否使用本地時區
+
+---
+
+## 📞 需要協助
+
+如果遇到問題：
+
+1. **檢查 Console 錯誤訊息**
+2. **截圖給原本的 Claude**
+3. **提供具體的錯誤描述**
+
+---
+
+✅ 完成以上所有步驟後，婚禮儀節表功能就完成了！
+
+## 🎉 上線時間表
+
+```
+現在 ~ 2026/2/7 11:59：
+└── 平常模式（單一彈窗 + 回覆出席）
+
+2026/2/7 12:00 ~ 2026/2/8 12:00：
+└── 特殊模式（雙層彈窗 + 婚禮儀節表）
+
+2026/2/8 12:00 之後：
+└── 平常模式（單一彈窗 + 回覆出席）
+```
