@@ -719,6 +719,13 @@
             });
         }
 
+        // 判斷是否顯示儀節表（2/7 12:00 之後都顯示）
+        function isSpecialPeriod() {
+            const now = new Date();
+            const startTime = CONFIG.ceremonySchedule.startTime; // 2026/2/7 12:00
+            return now >= startTime;
+        }
+
         // 頁面載入完成後執行
         window.addEventListener('load', function() {
             // 初始化頁面內容
@@ -730,12 +737,11 @@
             // 初始化地點按鈕
             initLocationButtons();
 
-            // 判斷是否顯示儀節表（2/7 12:00 之後都顯示）
-            function isSpecialPeriod() {
-                const now = new Date();
-                const startTime = CONFIG.ceremonySchedule.startTime;
-                return now >= startTime; // 2/7 12:00 之後都顯示儀節表
-            }
+            // 更新導航列按鈕文字
+            updateRSVPLink();
+
+            // 更新下方卡片區域
+            updateLinksSection();
 
             // 顯示歡迎彈窗
             Swal.fire({
@@ -1083,9 +1089,43 @@
             }
         }
 
+        // 更新下方卡片區域（根據時間）
+        function updateLinksSection() {
+            const sectionTitle = document.querySelector('#links h2');
+            const rsvpCard = document.querySelector('.rsvp-form-link');
+
+            if (!sectionTitle || !rsvpCard) return;
+
+            if (isSpecialPeriod()) {
+                // 2/7 之後：改成婚禮儀節表
+                sectionTitle.textContent = '婚禮資訊';
+
+                // 更新卡片內容
+                const icon = rsvpCard.querySelector('.card-icon');
+                const title = rsvpCard.querySelector('h3');
+                const description = rsvpCard.querySelector('p');
+
+                if (icon) icon.textContent = '🎊';
+                if (title) title.textContent = '查看婚禮儀節表';
+                if (description) description.textContent = '查看當日婚禮流程';
+
+                // 更改連結為打開儀節表
+                rsvpCard.href = '#ceremony-schedule';
+                rsvpCard.removeAttribute('target');
+                rsvpCard.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openCeremonySchedule(0);
+                });
+            } else {
+                // 平常：保持原樣
+                sectionTitle.textContent = '回覆出席';
+            }
+        }
+
         // 頁面載入時執行
         document.addEventListener('DOMContentLoaded', function() {
             updateRSVPLink();
+            updateLinksSection();
         });
 
         function openCeremonySchedule(index) {
