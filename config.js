@@ -12,7 +12,7 @@ const CONFIG = {
         groomProfile: {
             name: "TOM",
             title: "新郎",
-            photo: "./圖片/立誠吃飯照.jpg",  // 新郎照片路徑
+            photo: "./圖片/新郎獨照.webp",  // 新郎照片路徑
             description: "高高瘦瘦、內向低調、獨立堅強、細心負責、事事放心裡、愛吃辣",
             hobbies: ["彰化伸港", "新北板橋", "基隆中正"],
             quote: "愛是恆久忍耐，又有恩慈"
