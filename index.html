@@ -730,9 +730,11 @@
             // 初始化地點按鈕
             initLocationButtons();
 
-            // 判斷是否在特殊期間
+            // 判斷是否顯示儀節表（2/7 12:00 之後都顯示）
             function isSpecialPeriod() {
-                return true;
+                const now = new Date();
+                const startTime = CONFIG.ceremonySchedule.startTime;
+                return now >= startTime; // 2/7 12:00 之後都顯示儀節表
             }
 
             // 顯示歡迎彈窗
@@ -761,8 +763,13 @@
                     // 播放背景音樂並淡入
                     fadeInMusic();
 
-                    // 如果在特殊期間，顯示第二個彈窗
-                    if (isSpecialPeriod()) {
+                    // 只在婚禮期間（2/7 12:00 ~ 2/8 12:00）顯示第二個彈窗
+                    const now = new Date();
+                    const startTime = CONFIG.ceremonySchedule.startTime;
+                    const endTime = CONFIG.ceremonySchedule.endTime;
+                    const isDuringCeremony = now >= startTime && now <= endTime;
+
+                    if (isDuringCeremony) {
                         setTimeout(() => {
                             showCeremonySchedulePrompt();
                         }, 500);
