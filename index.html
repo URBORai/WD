@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
     <!-- 自訂樣式 -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <!-- 固定式導航列 -->
@@ -323,7 +323,7 @@
     </div>
 
     <!-- 配置檔 -->
-    <script src="config.js"></script>
+    <script src="./config.js"></script>
 
     <!-- AOS JavaScript -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -338,17 +338,28 @@
     <script>
         // 使用配置檔初始化頁面內容
         function initPageContent() {
-            // 更新新人名字
-            document.querySelector('.couple-names').textContent =
-                CONFIG.couple.groom + CONFIG.couple.separator + CONFIG.couple.bride;
+            // 更新新人名字（如果元素存在）
+            const coupleNames = document.querySelector('.couple-names');
+            if (coupleNames) {
+                coupleNames.textContent = CONFIG.couple.groom + CONFIG.couple.separator + CONFIG.couple.bride;
+            }
 
-            // 更新婚禮日期
-            document.querySelector('.wedding-date').textContent = CONFIG.wedding.date;
+            // 更新婚禮日期（如果元素存在）
+            const weddingDate = document.querySelector('.wedding-date');
+            if (weddingDate) {
+                weddingDate.textContent = CONFIG.wedding.date;
+            }
 
             // 更新婚禮資訊
-            document.querySelector('.wedding-date-info').textContent =
-                `${CONFIG.wedding.date}(${CONFIG.wedding.dayOfWeek})`;
-            document.querySelector('.wedding-time-info').textContent = CONFIG.wedding.time;
+            const weddingDateInfo = document.querySelector('.wedding-date-info');
+            if (weddingDateInfo) {
+                weddingDateInfo.textContent = `${CONFIG.wedding.date}(${CONFIG.wedding.dayOfWeek})`;
+            }
+
+            const weddingTimeInfo = document.querySelector('.wedding-time-info');
+            if (weddingTimeInfo) {
+                weddingTimeInfo.textContent = CONFIG.wedding.time;
+            }
 
             // 初始化幻燈片
             initSlideshow();
@@ -721,6 +732,13 @@
 
         // 頁面載入完成後執行
         window.addEventListener('load', function() {
+            // 檢查 CONFIG 是否已載入
+            if (typeof CONFIG === 'undefined') {
+                console.error('CONFIG 未載入！請檢查 config.js 檔案。');
+                alert('配置檔載入失敗，請檢查檔案路徑或重新整理頁面。');
+                return;
+            }
+
             // 初始化頁面內容
             initPageContent();
 
@@ -1171,6 +1189,6 @@
     </script>
 
     <!-- 留言板功能 -->
-    <script src="guestbook.js"></script>
+    <script src="./guestbook.js"></script>
 </body>
 </html>
