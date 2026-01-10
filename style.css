@@ -867,6 +867,37 @@ section {
     font-weight: 600;
 }
 
+/* 婚禮進程介紹文字 */
+.timeline-intro-text {
+    text-align: center;
+    font-size: 1rem;
+    color: #000;
+    font-weight: 400;
+    margin-top: -30px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.timeline-intro-text strong {
+    color: #000;
+    font-weight: 400;
+}
+
+/* 婚禮進程結尾文字 */
+.timeline-closing-text {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #000;
+    font-weight: 700;
+    margin-top: 40px;
+    line-height: 1.6;
+}
+
+.timeline-closing-text strong {
+    color: #000;
+    font-weight: 700;
+}
+
 /* 時間軸容器 */
 .timeline-wrapper {
     position: relative;
@@ -1377,6 +1408,21 @@ section {
     .timeline-content h2 {
         font-size: 2rem;
         margin-bottom: 3rem;
+    }
+
+    .timeline-intro-text {
+        font-size: 0.9rem;
+        font-weight: 400;
+        margin-top: -1.5rem;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+    }
+
+    .timeline-closing-text {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-top: 2rem;
+        padding: 0 1rem;
     }
 
     .timeline-wrapper {
@@ -2131,6 +2177,19 @@ section {
     .timeline-content h2 {
         font-size: 2.2rem;
         margin-bottom: 50px;
+    }
+
+    .timeline-intro-text {
+        font-size: 0.95rem;
+        font-weight: 400;
+        margin-top: -25px;
+        margin-bottom: 35px;
+    }
+
+    .timeline-closing-text {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-top: 35px;
     }
 
     .timeline-item {
