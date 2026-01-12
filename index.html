@@ -245,6 +245,18 @@
             <div class="messages-list" id="messages-list" data-aos="fade-up" data-aos-delay="300">
                 <div class="loading-spinner">載入中...</div>
             </div>
+
+            <!-- 留言導航按鈕 -->
+            <div class="messages-navigation" data-aos="fade-up" data-aos-delay="400">
+                <button class="messages-nav-btn prev" onclick="prevPage()" aria-label="上一頁">
+                    ‹
+                </button>
+                <span class="page-indicator">1 / 1</span>
+                <button class="messages-nav-btn next" onclick="nextPage()" aria-label="下一頁">
+                    ›
+                </button>
+                <span class="auto-play-indicator">▶️ 自動播放中</span>
+            </div>
         </div>
     </section>
 
@@ -380,28 +392,63 @@
             return result;
         }
 
+        // ========== 每日精選幻燈片 ==========
+
         /**
-         * 根據當前時間產生 seed
-         * 方案 D：月份 + 日期 + 時間
-         * @returns {number} seed 值
+         * 根據今天日期產生 Seed
+         * 相同日期 → 相同 Seed → 所有人看到相同照片
+         * @returns {number} 今日的 Seed
          */
-        function generateTimeSeed() {
-            const now = new Date();
+        function getTodaySeed() {
+            const today = new Date();
 
-            // 計算 seed
-            const seed = (now.getMonth() + 1) * 100000 +  // 月份（1-12）
-                         now.getDate() * 86400 +           // 日期（1-31）
-                         now.getHours() * 3600 +           // 小時（0-23）
-                         now.getMinutes() * 60 +           // 分鐘（0-59）
-                         now.getSeconds();                  // 秒數（0-59）
-
-            // 在 console 顯示（方便測試驗證）
-            console.log('=== 幻燈片隨機 Seed ===');
-            console.log('時間:', now.toLocaleString('zh-TW'));
-            console.log('Seed:', seed);
-            console.log('=======================');
+            // 計算 Seed：年月日組合
+            const seed = today.getFullYear() * 10000 +      // 年份
+                         (today.getMonth() + 1) * 100 +     // 月份（0-11 → 1-12）
+                         today.getDate();                    // 日期
 
             return seed;
+        }
+
+        /**
+         * 取得今日精選的幻燈片圖片
+         * @returns {Array} 今日要顯示的圖片陣列
+         */
+        function getTodaySlideshow() {
+            // 1. 讀取所有圖片
+            const allImages = CONFIG.slideshow.images;
+            const totalCount = allImages.length;  // 自動計算有幾張
+
+            // 2. 決定今天顯示幾張（最多 10 張，圖片少就全顯示）
+            const displayCount = Math.min(totalCount, 10);
+
+            // 3. 計算今日 Seed
+            const seed = getTodaySeed();
+
+            // 4. 在 Console 顯示資訊（方便測試）
+            console.log('========== 今日精選幻燈片 ==========');
+            console.log('日期:', new Date().toLocaleDateString('zh-TW'));
+            console.log('Seed:', seed);
+            console.log('圖片總數:', totalCount);
+            console.log('今日顯示:', displayCount, '張');
+
+            // 5. 建立隨機數生成器
+            const rng = new SeededRandom(seed);
+
+            // 6. 洗牌全部圖片
+            const shuffled = shuffleArray(allImages, rng);
+
+            // 7. 取前 N 張
+            const todayImages = shuffled.slice(0, displayCount);
+
+            // 8. 顯示挑選結果（方便驗證）
+            console.log('今日選擇:', todayImages.map((img, i) => {
+                const originalIndex = allImages.indexOf(img) + 1;
+                return `圖${originalIndex}`;
+            }).join(', '));
+            console.log('====================================');
+
+            return todayImages;
         }
 
         // ========== 配置設定 ==========
@@ -608,24 +655,10 @@
             const container = document.querySelector('.slideshow-container');
             if (!container || !CONFIG.slideshow || !CONFIG.slideshow.images.length) return;
 
-            // ========== 幻燈片隨機順序 ==========
+            // ========== 使用每日精選幻燈片 ==========
 
-            // 1. 產生 seed
-            const seed = generateTimeSeed();
-
-            // 2. 建立隨機數生成器
-            const rng = new SeededRandom(seed);
-
-            // 3. 取得原始圖片陣列並洗牌
-            const originalImages = CONFIG.slideshow.images;
-            shuffledImages = shuffleArray(originalImages, rng);
-
-            // 4. 在 console 顯示順序（方便測試）
-            console.log('原始順序:', originalImages.map((img, i) => `圖${i + 1}`));
-            console.log('隨機順序:', shuffledImages.map((img, i) => {
-                const originalIndex = originalImages.indexOf(img) + 1;
-                return `圖${originalIndex}`;
-            }));
+            // 使用「每日精選」取得今日要顯示的圖片
+            shuffledImages = getTodaySlideshow();
 
             // 清空容器
             container.innerHTML = '';

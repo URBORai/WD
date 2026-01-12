@@ -1669,7 +1669,7 @@ section {
 
 /* ========== 留言板區塊 ========== */
 .guestbook-section {
-    min-height: 80vh;
+    min-height: auto;
     padding: 6rem 2rem;
     background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
 }
@@ -1835,6 +1835,11 @@ section {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    max-height: 800px;
+    min-height: 400px;
+    overflow: hidden;
+    position: relative;
+    transition: opacity 0.3s ease;
 }
 
 .message-card {
@@ -2692,5 +2697,84 @@ section {
     .ceremony-schedule-lightbox img {
         max-height: 85vh;
         max-width: 70vw;
+    }
+}
+/* ========== 留言板導航按鈕 ========== */
+
+.messages-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 0.5rem;
+}
+
+.messages-nav-btn {
+    background: #d4a574;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(212, 165, 116, 0.3);
+}
+
+.messages-nav-btn:hover {
+    background: #c49563;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(212, 165, 116, 0.5);
+}
+
+.messages-nav-btn:active {
+    transform: scale(0.95);
+}
+
+.messages-nav-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.page-indicator {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: center;
+}
+
+.auto-play-indicator {
+    font-size: 0.8rem;
+    color: #999;
+    margin-left: 1rem;
+}
+
+.auto-play-indicator.active {
+    color: #d4a574;
+}
+
+/* 手機版 */
+@media (max-width: 768px) {
+    .messages-list {
+        max-height: 600px;
+        min-height: 300px;
+    }
+
+    .messages-nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.3rem;
+    }
+    
+    .page-indicator {
+        font-size: 0.85rem;
+        min-width: 50px;
     }
 }
