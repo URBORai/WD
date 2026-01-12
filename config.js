@@ -62,7 +62,7 @@ const CONFIG = {
         restaurant: {
             name: "天賜良緣",
             icon: "📍",
-            mapUrl: "https://www.google.com/maps?q=242新北市新莊區中正路542號&output=embed"
+            mapUrl: "https://www.google.com/maps?q=天賜良緣大飯店+新北市新莊區中正路542號&output=embed"
         }
     },
 

@@ -341,6 +341,71 @@
 
     <!-- 自訂 JavaScript -->
     <script>
+        // ========== Seeded Random Generator ==========
+        /**
+         * LCG (Linear Congruential Generator) 演算法
+         * 可以用 seed 控制隨機數序列，相同 seed 產生相同序列
+         */
+        class SeededRandom {
+            constructor(seed) {
+                // 確保 seed 在有效範圍內
+                this.seed = seed % 2147483647;
+                if (this.seed <= 0) this.seed += 2147483646;
+            }
+
+            /**
+             * 產生下一個隨機數（0-1 之間）
+             */
+            next() {
+                this.seed = (this.seed * 16807) % 2147483647;
+                return (this.seed - 1) / 2147483646;
+            }
+        }
+
+        /**
+         * Fisher-Yates 洗牌演算法（使用 seeded random）
+         * @param {Array} array - 要洗牌的陣列
+         * @param {SeededRandom} rng - 隨機數生成器
+         * @returns {Array} 洗牌後的新陣列（不修改原陣列）
+         */
+        function shuffleArray(array, rng) {
+            // 複製陣列，避免修改原始資料
+            const result = [...array];
+
+            // Fisher-Yates 洗牌
+            for (let i = result.length - 1; i > 0; i--) {
+                const j = Math.floor(rng.next() * (i + 1));
+                [result[i], result[j]] = [result[j], result[i]];
+            }
+
+            return result;
+        }
+
+        /**
+         * 根據當前時間產生 seed
+         * 方案 D：月份 + 日期 + 時間
+         * @returns {number} seed 值
+         */
+        function generateTimeSeed() {
+            const now = new Date();
+
+            // 計算 seed
+            const seed = (now.getMonth() + 1) * 100000 +  // 月份（1-12）
+                         now.getDate() * 86400 +           // 日期（1-31）
+                         now.getHours() * 3600 +           // 小時（0-23）
+                         now.getMinutes() * 60 +           // 分鐘（0-59）
+                         now.getSeconds();                  // 秒數（0-59）
+
+            // 在 console 顯示（方便測試驗證）
+            console.log('=== 幻燈片隨機 Seed ===');
+            console.log('時間:', now.toLocaleString('zh-TW'));
+            console.log('Seed:', seed);
+            console.log('=======================');
+
+            return seed;
+        }
+
+        // ========== 配置設定 ==========
         // 使用配置檔初始化頁面內容
         function initPageContent() {
             // 更新新人名字（如果元素存在）
@@ -537,15 +602,37 @@
         let currentSlide = 0;
         let slideInterval;
 
+        // 全域變數：儲存洗牌後的圖片順序
+        let shuffledImages = [];
+
         function initSlideshow() {
             const container = document.querySelector('.slideshow-container');
             if (!container || !CONFIG.slideshow || !CONFIG.slideshow.images.length) return;
 
+            // ========== 幻燈片隨機順序 ==========
+
+            // 1. 產生 seed
+            const seed = generateTimeSeed();
+
+            // 2. 建立隨機數生成器
+            const rng = new SeededRandom(seed);
+
+            // 3. 取得原始圖片陣列並洗牌
+            const originalImages = CONFIG.slideshow.images;
+            shuffledImages = shuffleArray(originalImages, rng);
+
+            // 4. 在 console 顯示順序（方便測試）
+            console.log('原始順序:', originalImages.map((img, i) => `圖${i + 1}`));
+            console.log('隨機順序:', shuffledImages.map((img, i) => {
+                const originalIndex = originalImages.indexOf(img) + 1;
+                return `圖${originalIndex}`;
+            }));
+
             // 清空容器
             container.innerHTML = '';
 
-            // 創建幻燈片
-            CONFIG.slideshow.images.forEach((image, index) => {
+            // 5. 使用洗牌後的陣列創建幻燈片
+            shuffledImages.forEach((image, index) => {
                 const slide = document.createElement('div');
                 slide.className = 'slideshow-slide' + (index === 0 ? ' active' : '');
                 slide.innerHTML = `<img src="${image}" alt="新人照片 ${index + 1}">`;
@@ -556,7 +643,7 @@
             // 創建導航點
             const dotsContainer = document.createElement('div');
             dotsContainer.className = 'slideshow-dots';
-            CONFIG.slideshow.images.forEach((_, index) => {
+            shuffledImages.forEach((_, index) => {
                 const dot = document.createElement('span');
                 dot.className = 'slideshow-dot' + (index === 0 ? ' active' : '');
                 dot.addEventListener('click', (e) => {
@@ -617,9 +704,9 @@
             const lightboxTotal = document.getElementById('lightbox-total');
 
             currentLightboxIndex = index;
-            lightboxImg.src = CONFIG.slideshow.images[index];
+            lightboxImg.src = shuffledImages[index];
             lightboxCurrent.textContent = index + 1;
-            lightboxTotal.textContent = CONFIG.slideshow.images.length;
+            lightboxTotal.textContent = shuffledImages.length;
 
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden'; // 防止背景滾動
@@ -638,13 +725,13 @@
         }
 
         function changeLightboxImage(direction) {
-            const total = CONFIG.slideshow.images.length;
+            const total = shuffledImages.length;
             currentLightboxIndex = (currentLightboxIndex + direction + total) % total;
 
             const lightboxImg = document.getElementById('lightbox-img');
             const lightboxCurrent = document.getElementById('lightbox-current');
 
-            lightboxImg.src = CONFIG.slideshow.images[currentLightboxIndex];
+            lightboxImg.src = shuffledImages[currentLightboxIndex];
             lightboxCurrent.textContent = currentLightboxIndex + 1;
         }
 
