@@ -50,6 +50,13 @@ const CONFIG = {
             "./圖片/DSC07158.webp",
             "./圖片/DSC07177.webp",
             "./圖片/DSC07278.webp",
+            "./圖片/DSC07442.webp",
+            "./圖片/DSC07396.webp",
+            "./圖片/DSC07403.webp",
+            "./圖片/DSC07409.webp",
+            "./圖片/DSC07506.webp",
+            "./圖片/DSC07511.webp",
+            "./圖片/DSC07403.webp",
             // 可以繼續添加更多照片
         ],
         interval: 3000  // 自動切換間隔時間(毫秒), 3000 = 3秒
