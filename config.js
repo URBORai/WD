@@ -4,13 +4,13 @@
 const CONFIG = {
     // ===== 新人資訊 =====
     couple: {
-        groom: "TOM",           // 新郎名字
-        bride: "JOY",           // 新娘名字
+        groom: "立誠",           // 新郎名字
+        bride: "珈恩",           // 新娘名字
         separator: " & ",       // 名字之間的分隔符號
 
         // 新郎個人介紹
         groomProfile: {
-            name: "TOM",
+            name: "黃立誠(TOM)",
             title: "新郎",
             photo: "./圖片/新郎獨照.webp",  // 新郎照片路徑
             description: "高高瘦瘦、內向低調、獨立堅強、細心負責、事事放心裡、愛吃辣",
@@ -20,7 +20,7 @@ const CONFIG = {
 
         // 新娘個人介紹
         brideProfile: {
-            name: "JOY",
+            name: "劉珈恩(JOY)",
             title: "新娘",
             photo: "./圖片/新娘接花照.webp",  // 新娘照片路徑
             description: "矮矮胖胖(她說她結婚那天會變得矮矮瘦瘦，請大家敬請期待)、外向大方、喜愛聊天、粗心ㄎㄧㄤ、事事分享、超怕辣",
